@@ -1,4 +1,4 @@
-#mood
+# mood
 
 Playing around with my own mood data from 2020.
 
@@ -8,9 +8,4 @@ git clone <repo>
 cd mood/
 ```
 
-###### Developer Key
-To access the Goodreads API, you [need a developer key](https://www.goodreads.com/api/documentation).
-1. Register for a key [here](https://www.goodreads.com/api/keys) and save the generated `key` and `secret`.
-2. In `/key.json`, save your `key` and `secret` as strings.
-3. Run `git update-index --assume-unchanged key.json` from your command line.
-# mood
+Note: `mood.csv` is a csv with 12 rows (months) and 31 elements from `{a, b, c, d, e, f, x}` to represent the 6 moods, with `x` for trailing days (example: 2 at the end of feb).
