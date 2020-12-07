@@ -1,0 +1,26 @@
+{
+  1: {
+    "color": "yellow",
+    "description": "happy, positive"
+  },
+  2: {
+    "color": "green",
+    "description": "relaxed, content"
+  },
+  3: {
+    "color": "light blue",
+    "description": "neutral, uneventful"
+  },
+  4: {
+    "color": "blue",
+    "description": "sad, lonely, depressed"
+  },
+  5: {
+    "color": "purple",
+    "description": "stressed, anxious"
+  },
+  6: {
+    "color": "pink",
+    "description": "angry, frustrated, upset"
+  }
+}
