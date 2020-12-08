@@ -1,0 +1,6 @@
+happy:happy, positive
+relaxed:relaxed, content
+neutral:neutral, uneventful
+sad:sad, lonely, depressed
+anxious:stressed, anxious
+upset:angry, frustrated, upset
