@@ -30,13 +30,15 @@ print("moods: ", mood_categories, end="\n\n")
 
 # read in mood tracked data
 df = pd.read_csv("mood.csv")
-print("mood data:\n", df.apply(pd.value_counts), end="\n\n")
+df_counts = df.apply(pd.value_counts)
+print("original mood data:\n", df_counts, end="\n\n")
 
 
-## STATS
-print("year breakdown:")
+## YEAR STATS
 total_days = df.shape[0] * df.shape[1] - (df.values == "x").sum()
+print("you tracked your mood for", total_days, "days this year!\n")
 
+print("year breakdown:")
 days = []
 percentages = []
 for m in mood_categories:
@@ -49,8 +51,18 @@ df_year_stats = pd.DataFrame(year_stats).T
 df_year_stats.columns = ['mood','days','percentage']
 print(df_year_stats.to_string(index=False), end="\n\n")
 
-# most common mood
-print("you were mostly", str(df_year_stats.mood[df_year_stats.days.idxmax()]), "this year.\n\n")
+# most/least common moods
+max_mood = str(df_year_stats.mood[df_year_stats.days.idxmax()])
+min_mood = str(df_year_stats.mood[df_year_stats.days.idxmin()])
+print("you felt most frequently", max_mood, "this year, and least frequently", min_mood, end="\n\n")
+
+
+# SEASON STATS
+print("now lets break it down by season...\n")
+season_mapping = {"january": "winter", "february": "winter", "march": "spring", "april": "spring", "may": "spring", "june": "summer", "july": "summer", "august": "summer", "september": "fall", "october": "fall", "november": "fall", "december": "winter"}
+df_seasonal =df_counts.groupby(season_mapping, axis=1).sum()
+df_seasonal.reset_index(level=0)
+print(df_seasonal)
 
 # monthly frequencies
 #for (month, month_data) in df.iteritems():

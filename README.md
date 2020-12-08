@@ -21,6 +21,6 @@ In 2020, I categorized my mood daily to the following 6 categories:
 - `mood_categories.txt` for details on the 6 moods
 - `mood.csv` is a csv with 12 cols (months) where elements are `{happy, relaxed, neutral, sad, anxious, upset, x}` to represent the 6 moods, with `x` for trailing days (example: 2 at the end of feb)
 
-### Analytics
+### Analytics (so far)
 - Mood frequency & percentages for the year
-- Monthly frequency tables
+- Monthly and seasonal frequency tables
