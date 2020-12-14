@@ -4,8 +4,8 @@ Analytics out of my own mood data from 2020.
 
 ### Setup
 ```bash
-git clone <repo>
-cd mood/
+$ git clone <repo>
+$ cd mood/
 ```
 
 ### Data

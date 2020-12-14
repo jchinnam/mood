@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import datetime
 import json
 
 # read in data
@@ -11,12 +12,10 @@ def read_input():
     with open("mood_categories.txt") as f:
         for line in f:
             mood_categories.append(line.split(":")[0])
-    print("moods: ", mood_categories, end="\n\n")
 
     # read in mood tracked data
     df = pd.read_csv("mood.csv")
     df_counts = df.apply(pd.value_counts)
-    print("original mood data:\n", df_counts, end="\n\n")
 
     return df, df_counts, mood_categories
 
@@ -34,12 +33,6 @@ def get_frequencies(data):
     frequencies = dict(zip(unique, counts))
     if 'x' in frequencies.keys(): del frequencies['x'] # ignore trailing days
     print("frequencies:", frequencies)
-
-# calculate and print monthly stats
-def monthly_stats():
-    for (month, month_data) in df.iteritems():
-        print('month: ', month)
-        get_frequencies(month_data.values)
 
 # calculate and print year stats
 def year_stats(df, df_counts, mood_categories):
@@ -68,16 +61,28 @@ def year_stats(df, df_counts, mood_categories):
 def season_stats(df, df_counts, mood_categories):
     print("now lets break it down by season...\n")
     season_mapping = {"january": "winter", "february": "winter", "march": "spring", "april": "spring", "may": "spring", "june": "summer", "july": "summer", "august": "summer", "september": "fall", "october": "fall", "november": "fall", "december": "winter"}
-    df_seasonal =df_counts.groupby(season_mapping, axis=1).sum()
+    df_seasonal = df_counts.groupby(season_mapping, axis=1).sum()
     df_seasonal.reset_index(level=0)
     print(df_seasonal)
 
-def main():
-        df, df_counts, mood_categories = read_input()
+# ret weekday name from day, month, year input
+def what_weekday(day, month, year):
+    weekdays = ("monday","tuesday","wednesday","thursday","friday","saturday","sunday")
+    date = datetime.date(year, month, day)
+    return weekdays[date.weekday()]
 
-        # print stats
-        year_stats(df, df_counts, mood_categories)
-        season_stats(df, df_counts, mood_categories)
+def main():
+    # read input
+    df, df_counts, mood_categories = read_input()
+    print("moods: ", mood_categories, end="\n\n")
+    print("original mood data:\n", df_counts, end="\n\n")
+
+    # print stats
+    year_stats(df, df_counts, mood_categories)
+    season_stats(df, df_counts, mood_categories)
+
+    day_of_interest = "friday"
+    mood_of_interest = "anxious"
 
 if __name__ == '__main__':
         main()
