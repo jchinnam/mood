@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import datetime
@@ -81,12 +82,18 @@ def time_series(df, mood_categories, sentiment_mapping):
                 # print(month, day+1, el, ":", sentiment_mapping[el])
                 time_series_data.append(sentiment_mapping[el]) # append sentiment val
 
-    print("time series data:", time_series_data)
-    print(len(time_series_data))
+    # print("time series data:", time_series_data)
+    # print(len(time_series_data))
+
+    base = datetime.date(2020, 1, 1)
+    x = [base + datetime.timedelta(days=x) for x in range(len(time_series_data))]
+    y = time_series_data
+    # print(x)
 
     # plot
+    plt.plot(x,y)
+    plt.show()
 
-    return 0
 
 def main():
     # read input
