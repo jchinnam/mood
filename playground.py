@@ -73,12 +73,19 @@ def what_weekday(day, month, year):
 
 # build and plot time series
 def time_series(df, mood_categories, sentiment_mapping):
-    # flatten data and remove header
+    # flatten + convert data to sentiment val
+    time_series_data = []
+    for month, row in df.T.iterrows():
+        for day, el in enumerate(row):
+            if el != 'x': # ignore trailing days
+                # print(month, day+1, el, ":", sentiment_mapping[el])
+                time_series_data.append(sentiment_mapping[el]) # append sentiment val
 
-    # remove x days
+    print("time series data:", time_series_data)
+    print(len(time_series_data))
 
     # plot
-    
+
     return 0
 
 def main():
@@ -88,8 +95,8 @@ def main():
     print("original mood data:\n", df_counts, end="\n\n")
 
     # print stats
-    year_stats(df, df_counts, mood_categories)
-    season_stats(df, df_counts, mood_categories)
+    # year_stats(df, df_counts, mood_categories)
+    # season_stats(df, df_counts, mood_categories)
 
     # assign sentiment to moods
     sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -2, "anxious": -1, "upset": -2}
@@ -98,8 +105,8 @@ def main():
     # build time series
     time_series(df, mood_categories, sentiment_mapping)
 
-    day_of_interest = "friday"
-    mood_of_interest = "anxious"
+    # day_of_interest = "friday"
+    # mood_of_interest = "anxious"
 
 if __name__ == '__main__':
         main()
