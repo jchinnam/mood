@@ -24,3 +24,4 @@ In 2020, I categorized my mood daily to the following 6 categories:
 ### Analytics (so far)
 - Mood frequency & percentages for the year
 - Monthly and seasonal frequency tables
+- Time series (via sentiment assignment)
