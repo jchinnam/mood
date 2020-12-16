@@ -73,7 +73,7 @@ def what_weekday(day, month, year):
     return weekdays[date.weekday()]
 
 # build and plot time series
-def time_series(df, mood_categories, sentiment_mapping):
+def time_series_raw(df, mood_categories, sentiment_mapping):
     # flatten + convert data to sentiment val
     time_series_data = []
     for month, row in df.T.iterrows():
@@ -86,14 +86,17 @@ def time_series(df, mood_categories, sentiment_mapping):
     # print(len(time_series_data))
 
     base = datetime.date(2020, 1, 1)
-    x = [base + datetime.timedelta(days=x) for x in range(len(time_series_data))]
-    y = time_series_data
-    # print(x)
+    dates = [base + datetime.timedelta(days=x) for x in range(len(time_series_data))]
 
-    # plot
-    plt.plot(x,y)
+    # plot raw time series
+    plt.figure(figsize=(20,3))
+    plt.plot(dates,time_series_data)
     plt.show()
 
+def build_sentiment_df(df, sentiment_mapping):
+    df_sentiment = df
+    df_sentiment.replace(sentiment_mapping, inplace=True)
+    return df_sentiment
 
 def main():
     # read input
@@ -110,7 +113,10 @@ def main():
     # sentiment_mapping = {"happy": 1, "relaxed": 1, "neutral": 0, "sad": -1, "anxious": -1, "upset": -1}
 
     # build time series
-    time_series(df, mood_categories, sentiment_mapping)
+    time_series_raw(df, mood_categories, sentiment_mapping)
+
+    # df_sentiment = build_sentiment_df(df, sentiment_mapping)
+    # print(df_sentiment)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"
