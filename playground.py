@@ -8,6 +8,7 @@ import json
 
 # read in data
 def read_input():
+    print("reading input...")
     # build mood categories
     mood_categories = []
     with open("mood_categories.txt") as f:
@@ -72,9 +73,10 @@ def what_weekday(day, month, year):
     date = datetime.date(year, month, day)
     return weekdays[date.weekday()]
 
-# build and plot time series
-def time_series_raw(df, mood_categories, sentiment_mapping):
+# build time series data
+def build_time_series_raw(df, mood_categories, sentiment_mapping):
     # flatten + convert data to sentiment val
+    print("converting data to sentiment time series...")
     time_series_data = []
     for month, row in df.T.iterrows():
         for day, el in enumerate(row):
@@ -82,16 +84,26 @@ def time_series_raw(df, mood_categories, sentiment_mapping):
                 # print(month, day+1, el, ":", sentiment_mapping[el])
                 time_series_data.append(sentiment_mapping[el]) # append sentiment val
 
-    # print("time series data:", time_series_data)
-    # print(len(time_series_data))
-
+    # create date range
     base = datetime.date(2020, 1, 1)
     dates = [base + datetime.timedelta(days=x) for x in range(len(time_series_data))]
 
     # plot raw time series
     plt.figure(figsize=(20,3))
     plt.plot(dates,time_series_data)
-    plt.show()
+    # plt.show()
+
+    # create df out of dates and sentiment data
+    df_time_series = pd.DataFrame({'date': dates, 'sentiment': time_series_data})
+    # print(df_time_series)
+    return df_time_series
+
+# plot time series
+def plot_time_series(df_time_series):
+    # calculate rolling means
+    print("calculating rolling means...")
+    df_time_series['seven_day_av'] = df_time_series.sentiment.rolling(7).mean()
+    # print(df_time_series)
 
 def build_sentiment_df(df, sentiment_mapping):
     df_sentiment = df
@@ -113,9 +125,10 @@ def main():
     # sentiment_mapping = {"happy": 1, "relaxed": 1, "neutral": 0, "sad": -1, "anxious": -1, "upset": -1}
 
     # build time series
-    time_series_raw(df, mood_categories, sentiment_mapping)
+    df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
+    plot_time_series(df_time_series)
 
-    # df_sentiment = build_sentiment_df(df, sentiment_mapping)
+    df_sentiment = build_sentiment_df(df, sentiment_mapping)
     # print(df_sentiment)
 
     # day_of_interest = "friday"
