@@ -108,10 +108,13 @@ def plot_time_series(df_time_series):
     # print(df_time_series)
 
     # plot
+    # ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
     ax = df_time_series.plot(x='date', y=['seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
 
     # customize axes
+    ax.set_ylabel("sentiment")
     ax.xaxis.get_label().set_visible(False)
+
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
     ax.xaxis.set_minor_formatter(mdates.DateFormatter("%b %Y"))
 
@@ -137,7 +140,7 @@ def main():
     # season_stats(df, df_counts, mood_categories)
 
     # assign sentiments to moods
-    sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -2, "anxious": -1, "upset": -2}
+    sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -1.5, "anxious": -1, "upset": -2}
 
     # build and plot time series
     df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
