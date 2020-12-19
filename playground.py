@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import datetime
 import json
 
@@ -89,21 +91,31 @@ def build_time_series_raw(df, mood_categories, sentiment_mapping):
     dates = [base + datetime.timedelta(days=x) for x in range(len(time_series_data))]
 
     # plot raw time series
-    plt.figure(figsize=(20,3))
-    plt.plot(dates,time_series_data)
+    # plt.figure(figsize=(20,3))
+    # plt.plot(dates,time_series_data)
     # plt.show()
 
     # create df out of dates and sentiment data
     df_time_series = pd.DataFrame({'date': dates, 'sentiment': time_series_data})
-    # print(df_time_series)
     return df_time_series
 
 # plot time series
 def plot_time_series(df_time_series):
     # calculate rolling means
     print("calculating rolling means...")
-    df_time_series['seven_day_av'] = df_time_series.sentiment.rolling(7).mean()
+    df_time_series['seven day rolling mean'] = df_time_series.sentiment.rolling(7).mean()
+    df_time_series['thirty day rolling mean'] = df_time_series.sentiment.rolling(30).mean()
     # print(df_time_series)
+
+    # plot
+    ax = df_time_series.plot(x='date', y=['seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
+
+    # customize axes
+    ax.xaxis.get_label().set_visible(False)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    ax.xaxis.set_minor_formatter(mdates.DateFormatter("%b %Y"))
+
+    plt.show()
 
 def build_sentiment_df(df, sentiment_mapping):
     df_sentiment = df
@@ -116,20 +128,22 @@ def main():
     print("moods: ", mood_categories, end="\n\n")
     print("original mood data:\n", df_counts, end="\n\n")
 
+    # set seaborn theme for plots
+    sns.set()
+    sns.set_palette("Paired")
+
     # print stats
     # year_stats(df, df_counts, mood_categories)
     # season_stats(df, df_counts, mood_categories)
 
-    # assign sentiment to moods
+    # assign sentiments to moods
     sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -2, "anxious": -1, "upset": -2}
-    # sentiment_mapping = {"happy": 1, "relaxed": 1, "neutral": 0, "sad": -1, "anxious": -1, "upset": -1}
 
-    # build time series
+    # build and plot time series
     df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
     plot_time_series(df_time_series)
 
-    df_sentiment = build_sentiment_df(df, sentiment_mapping)
-    # print(df_sentiment)
+    # df_sentiment = build_sentiment_df(df, sentiment_mapping)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"

@@ -25,3 +25,5 @@ In 2020, I categorized my mood daily to the following 6 categories:
 - Mood frequency & percentages for the year
 - Monthly and seasonal frequency tables
 - Time series (via sentiment assignment)
+  - with 7-day rolling mean
+  - with 30-day rolling mean
