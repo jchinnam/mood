@@ -8,6 +8,8 @@ import seaborn as sns
 import datetime
 import json
 
+# anaconda 5.0.1
+
 # read in data
 def read_input():
     print("reading input...")
@@ -39,22 +41,30 @@ def get_frequencies(data):
     print("frequencies:", frequencies)
 
 # calculate and print year stats
-def year_stats(df, df_counts, mood_categories):
+def year_stats(df, df_counts, mood_categories, mood_colors):
     total_days = df.shape[0] * df.shape[1] - (df.values == "x").sum()
     print("you tracked your mood for", total_days, "days this year!\n")
 
     print("year breakdown:")
     days = []
     percentages = []
+    percentages_vals = []
     for m in mood_categories:
         num_days = (df.values == m).sum()
         days.append(num_days)
         percentages.append(str(int(round(num_days/total_days, 2) * 100)) + "%")
-    year_stats = [mood_categories,days,percentages]
+        percentages_vals.append(int(round(num_days/total_days, 2) * 100))
 
-    df_year_stats = pd.DataFrame(year_stats).T
+    df_year_stats = pd.DataFrame([mood_categories,days,percentages]).T
     df_year_stats.columns = ['mood','days','percentage']
     print(df_year_stats.to_string(index=False), end="\n\n")
+
+    # plot
+    fig, ax = plt.subplots()
+    ax.bar(mood_categories, percentages_vals, color=mood_colors.values())
+    plt.xlabel('mood')
+    plt.ylabel('percentage')
+    plt.show()
 
     # most/least common moods
     max_mood = str(df_year_stats.mood[df_year_stats.days.idxmax()])
@@ -101,8 +111,12 @@ def plot_time_series(df_time_series):
     df_time_series['seven day rolling mean'] = df_time_series.sentiment.rolling(7).mean()
     df_time_series['thirty day rolling mean'] = df_time_series.sentiment.rolling(30).mean()
 
-    # plot
-    ax = df_time_series.plot(x='date', y=['seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
+    # print(df_time_series)
+    print("overall mean:", df_time_series["sentiment"].mean())
+    print("standard deviation:", df_time_series["sentiment"].std())
+
+    # plot: TODO, update plot coloring (grey out sentiment, update docs)
+    ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
 
     # customize axes
     ax.set_ylabel("sentiment")
@@ -127,9 +141,10 @@ def main():
     # set seaborn theme for plots
     sns.set()
     sns.set_palette("Paired")
+    mood_colors = {'happy': "#FDE517", 'relaxed': "#ABD006", 'neutral': "#04D0E5", 'sad': "#0497E5", 'anxious': "#B684FA", 'upset': "#FA84AA"}
 
     # print stats
-    year_stats(df, df_counts, mood_categories)
+    year_stats(df, df_counts, mood_categories, mood_colors)
     season_stats(df, df_counts, mood_categories)
 
     # assign sentiments to moods
