@@ -27,7 +27,7 @@ Taking into account personal understanding/weight of the mood categories, I desi
 
 Below is a time series of mood sentiment over the entire year, conveying a metric of positive vs. negative mood over time. Sentiment takes a value in range `[-2.0, 2.0]` inclusive. I take the rolling mean of sentiment value over 7-day and 30-day windows.
 
-![](/plots/time_series_rolling_means.png)
+![](/plots/time_series.png)
 
 Mood over the year is relatively volatile, unsurprising for a year as turbulent as 2020. The mean sentiment value is `0.0127`, with a standard deviation of `0.9402` for range `[-2.0, 2.0]`.
 
