@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import datetime
+import calendar
 import json
 
 # read in data
@@ -69,12 +70,6 @@ def season_stats(df, df_counts, mood_categories):
     df_seasonal.reset_index(level=0)
     print(df_seasonal)
 
-# ret weekday name from day, month, year input
-def what_weekday(day, month, year):
-    weekdays = ("monday","tuesday","wednesday","thursday","friday","saturday","sunday")
-    date = datetime.date(year, month, day)
-    return weekdays[date.weekday()]
-
 # build time series data
 def build_time_series_raw(df, mood_categories, sentiment_mapping):
     # flatten + convert data to sentiment val
@@ -118,6 +113,27 @@ def plot_time_series(df_time_series):
 
     plt.show()
 
+# ret weekday name from day, month, year input
+def what_weekday(year, month, day):
+    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    date = datetime.date(year, month, day)
+    return weekdays[date.weekday()]
+
+def build_weekly_data(df, mood_categories, mood_colors):
+    year = 2020
+    month_mapping = {month.lower(): index for index, month in enumerate(calendar.month_name) if month}
+
+    # build mood counts by weekday
+    print("calculating weekly mood counts...")
+    df_weekly = pd.DataFrame(0, index=["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"], columns=["happy", "relaxed", "neutral", "sad", "anxious", "upset"])
+    for month, row in df.T.iterrows():
+        for day, mood in enumerate(row):
+            if mood != 'x': # ignore trailing days
+                weekday = what_weekday(year, month_mapping[month], int(day+1))
+                df_weekly.at[weekday, mood] += 1
+    return df_weekly
+
+
 def build_sentiment_df(df, sentiment_mapping):
     df_sentiment = df
     df_sentiment.replace(sentiment_mapping, inplace=True)
@@ -144,6 +160,10 @@ def main():
     # build and plot time series
     df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
     # plot_time_series(df_time_series)
+
+    # build and plot weekly trends
+    df_weekly = build_weekly_data(df, mood_categories, mood_colors)
+    print(df_weekly)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"
