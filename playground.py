@@ -115,8 +115,9 @@ def plot_time_series(df_time_series):
     print("overall mean:", df_time_series["sentiment"].mean())
     print("standard deviation:", df_time_series["sentiment"].std())
 
-    # plot: TODO, update plot coloring (grey out sentiment, update docs)
-    ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8);
+    # plot
+    time_series_colors = ["#E1C8FB", "#AB69EF", "#3B0279"]
+    ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8, color=time_series_colors)
 
     # customize axes
     ax.set_ylabel("sentiment")
