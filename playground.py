@@ -8,8 +8,6 @@ import seaborn as sns
 import datetime
 import json
 
-# anaconda 5.0.1
-
 # read in data
 def read_input():
     print("reading input...")
@@ -24,14 +22,6 @@ def read_input():
     df_counts = df.apply(pd.value_counts)
 
     return df, df_counts, mood_categories
-
-# ret the most frequent mood in data
-def get_max_mood(data):
-    print("hi, this will have an implementation soon")
-
-# ret month that had the highest days of that mood
-def get_max_month(data, mood):
-    print("hi, this will have an implementation soon")
 
 # print frequencies of each mood in data
 def get_frequencies(data):
@@ -145,15 +135,15 @@ def main():
     mood_colors = {'happy': "#FDE517", 'relaxed': "#ABD006", 'neutral': "#04D0E5", 'sad': "#0497E5", 'anxious': "#B684FA", 'upset': "#FA84AA"}
 
     # print stats
-    year_stats(df, df_counts, mood_categories, mood_colors)
-    season_stats(df, df_counts, mood_categories)
+    # year_stats(df, df_counts, mood_categories, mood_colors)
+    # season_stats(df, df_counts, mood_categories)
 
     # assign sentiments to moods
     sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -1.5, "anxious": -1, "upset": -2}
 
     # build and plot time series
     df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
-    plot_time_series(df_time_series)
+    # plot_time_series(df_time_series)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"
