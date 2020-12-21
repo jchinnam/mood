@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from scipy.interpolate import spline
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
@@ -134,24 +135,29 @@ def build_weekly_data(df, mood_categories, mood_colors):
     return df_weekly
 
 def plot_weekly_trends(df_weekly, mood_categories, mood_colors):
-    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    weekly_trends_colors = mood_colors.values()
-    print(weekly_trends_colors)
-
-    # plot
-    # ax = df_weekly.plot(figsize=(11, 4), linewidth=1.1, color=weekly_trends_colors)
-    # ax.set_ylabel("count")
-    # plt.show()
-
     # plot w vertically stacked subplots
-    fig, axes = plt.subplots(6, figsize=(11, 6))
+    fig, axes = plt.subplots(6, sharex=True, sharey=True, figsize=(6, 9))
     fig.suptitle('weekly mood counts')
 
+    # 6 axes, for 6 mood line plots
     for index, ax in enumerate(axes):
         mood = mood_categories[index]
-        x = weekdays
+
+        x = list(range(0, 7)) # has to be numeric because to interpolate for smooth lines
         y = df_weekly[mood].tolist()
-        ax.plot(x, y, color=list(weekly_trends_colors)[index])
+
+        # smooth lines
+        x_sm = np.array(x)
+        y_sm = np.array(y)
+        x_smooth = np.linspace(x_sm.min(), x_sm.max(), 200)
+        y_smooth = spline(x, y, x_smooth)
+
+        # correcting x labels
+        ax.set_xticks(x)
+        ax.set_xticklabels(["sun", "mon", "tue", "wed", "thur", "fri", "sat"]) # same order as df_weekly index
+
+        ax.plot(x_smooth, y_smooth, color=list(mood_colors.values())[index], label=mood)
+        ax.legend(loc="upper right")
 
     plt.show()
 
