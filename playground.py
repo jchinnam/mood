@@ -133,6 +133,27 @@ def build_weekly_data(df, mood_categories, mood_colors):
                 df_weekly.at[weekday, mood] += 1
     return df_weekly
 
+def plot_weekly_trends(df_weekly, mood_categories, mood_colors):
+    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    weekly_trends_colors = mood_colors.values()
+    print(weekly_trends_colors)
+
+    # plot
+    # ax = df_weekly.plot(figsize=(11, 4), linewidth=1.1, color=weekly_trends_colors)
+    # ax.set_ylabel("count")
+    # plt.show()
+
+    # plot w vertically stacked subplots
+    fig, axes = plt.subplots(6, figsize=(11, 6))
+    fig.suptitle('weekly mood counts')
+
+    for index, ax in enumerate(axes):
+        mood = mood_categories[index]
+        x = weekdays
+        y = df_weekly[mood].tolist()
+        ax.plot(x, y, color=list(weekly_trends_colors)[index])
+
+    plt.show()
 
 def build_sentiment_df(df, sentiment_mapping):
     df_sentiment = df
@@ -163,7 +184,7 @@ def main():
 
     # build and plot weekly trends
     df_weekly = build_weekly_data(df, mood_categories, mood_colors)
-    print(df_weekly)
+    plot_weekly_trends(df_weekly, mood_categories, mood_colors)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"
