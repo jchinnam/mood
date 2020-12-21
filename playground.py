@@ -118,32 +118,31 @@ def plot_time_series(df_time_series):
 def what_weekday(year, month, day):
     weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     date = datetime.date(year, month, day)
-    return weekdays[date.weekday()]
+    return weekdays[date.weekday()] # weekday() index 0 corresponds to monday
 
 # build weekly aggregated data
-def build_weekly_data(df, mood_categories, mood_colors):
+def build_weekly_data(df, mood_categories, mood_colors, weekdays):
     year = 2020
     month_mapping = {month.lower(): index for index, month in enumerate(calendar.month_name) if month}
 
     # build mood counts by weekday
     print("\ncalculating weekly mood counts...")
-    df_weekly = pd.DataFrame(0, index=["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"], columns=["happy", "relaxed", "neutral", "sad", "anxious", "upset"])
+    df_weekly = pd.DataFrame(0, index=weekdays, columns=mood_categories)
     for month, row in df.T.iterrows():
         for day, mood in enumerate(row):
             if mood != 'x': # ignore trailing days
                 weekday = what_weekday(year, month_mapping[month], int(day+1))
                 df_weekly.at[weekday, mood] += 1
+    print(df_weekly)
+
     return df_weekly
 
 # print weekly stats
-def weekly_stats(df_weekly, sentiment_mapping):
+def weekly_stats(df_weekly, sentiment_mapping, weekdays):
     # print weekly mean sentiment values
-    print(df_weekly)
     print("\ncalculating mean sentiement by weekday...")
     for day_of_week, row in df_weekly.iterrows():
-        day_sentiment_total = row["happy"]*sentiment_mapping["happy"] + row["relaxed"]*sentiment_mapping["relaxed"] + row["neutral"]*sentiment_mapping["neutral"] + row["sad"]*sentiment_mapping["sad"] + row["anxious"]*sentiment_mapping["anxious"] + row["upset"]*sentiment_mapping["upset"]
-        num_days = row["happy"] + row["relaxed"] + row["neutral"] + row["sad"] + row["anxious"] + row["upset"]
-        day_sentiment_mean = day_sentiment_total / num_days
+        day_sentiment_mean = np.dot(row, list(sentiment_mapping.values())) / row.sum()
         print(day_of_week, ":", day_sentiment_mean)
 
 # plot weekly mood counts in vertically stacked subplots
@@ -156,7 +155,7 @@ def plot_weekly_trends_stacked(df_weekly, mood_categories, mood_colors):
     for index, ax in enumerate(axes):
         mood = mood_categories[index]
 
-        x = list(range(0, 7)) # has to be numeric because to interpolate for smooth lines
+        x = list(range(0, 7)) # has to be numeric to interpolate for smooth lines
         y = df_weekly[mood].tolist()
 
         # smooth lines
@@ -175,11 +174,11 @@ def plot_weekly_trends_stacked(df_weekly, mood_categories, mood_colors):
     plt.show()
 
 # plot weekly mood counts in one plot
-def plot_weekly_trends(df_weekly, mood_categories, mood_colors):
+def plot_weekly_trends(df_weekly, mood_colors):
      weekly_trends_colors = mood_colors.values()
 
      # plot
-     ax = df_weekly.plot(figsize=(11, 4), linewidth=1.1, color=weekly_trends_colors)
+     ax = df_weekly.plot(figsize=(7, 4), linewidth=1.1, color=weekly_trends_colors)
      ax.set_ylabel("count")
      plt.show()
 
@@ -195,26 +194,28 @@ def main():
     print("moods: ", mood_categories, end="\n\n")
     print("original mood data:\n", df_counts, end="\n\n")
 
+    # assign sentiments to moods
+    sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -1.5, "anxious": -1, "upset": -2}
+
     # set seaborn/color themes for plots
     sns.set()
     sns.set_palette("Paired")
     mood_colors = {'happy': "#FDE517", 'relaxed': "#ABD006", 'neutral': "#04D0E5", 'sad': "#0497E5", 'anxious': "#B684FA", 'upset': "#FA84AA"}
 
     # print long-run stats
-    # year_stats(df, df_counts, mood_categories, mood_colors)
-    # season_stats(df, df_counts, mood_categories)
-
-    # assign sentiments to moods
-    sentiment_mapping = {"happy": 2, "relaxed": 1, "neutral": 0, "sad": -1.5, "anxious": -1, "upset": -2}
+    year_stats(df, df_counts, mood_categories, mood_colors)
+    season_stats(df, df_counts, mood_categories)
 
     # build and plot time series
     df_time_series = build_time_series_raw(df, mood_categories, sentiment_mapping)
-    # plot_time_series(df_time_series)
+    plot_time_series(df_time_series)
 
     # build and plot weekly trends
-    df_weekly = build_weekly_data(df, mood_categories, mood_colors)
+    weekdays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+    df_weekly = build_weekly_data(df, mood_categories, mood_colors, weekdays)
     # plot_weekly_trends_stacked(df_weekly, mood_categories, mood_colors)
-    weekly_stats(df_weekly, sentiment_mapping)
+    plot_weekly_trends(df_weekly, mood_colors)
+    weekly_stats(df_weekly, sentiment_mapping, weekdays)
 
     # day_of_interest = "friday"
     # mood_of_interest = "anxious"
