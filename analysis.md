@@ -38,7 +38,9 @@ A few observations:
 - general upward trend of sentiment in the second half of the year as pandemic-inflicted stress subsides
 
 ##### Weekly Trends
-Positive moods like happy or relaxed are most common on weekends, with highest anxiety days during the week.
+Positive moods like happy or relaxed are most common on weekends, with the highest frequency of an anxious mood during the week.
 ![](/plots/weekly_mood_counts.png)
+
+If we collapse this further, and group moods by ***positive*** (happy, relaxed) and ***negative*** (sad, anxious, upset), ignoring neutral as the baseline, we see can plot the following distribution:
 
 Relative to the overall mean of `0.0127`, sentiment averages by day of the week are the following: `sunday: 0.13, monday: -0.06, tuesday: -0.17, wednesday: -0.1471, thursday: -0.1667, friday: 0.1373, saturday: 0.19`.

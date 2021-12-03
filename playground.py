@@ -54,6 +54,7 @@ def year_stats(df, df_counts, mood_categories, mood_colors):
     # plot
     fig, ax = plt.subplots()
     ax.bar(mood_categories, percentages_vals, color=mood_colors.values())
+    ax.set_title('Mood % Distribution')
     plt.xlabel('mood')
     plt.ylabel('percentage')
     plt.show()
@@ -103,7 +104,7 @@ def plot_time_series(df_time_series):
 
     # plot
     time_series_colors = ["#E1C8FB", "#AB69EF", "#3B0279"]
-    ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8, color=time_series_colors)
+    ax = df_time_series.plot(x='date', y=['sentiment', 'seven day rolling mean', 'thirty day rolling mean'], figsize=(11, 4), linewidth=0.8, color=time_series_colors, title="Sentiment Over 2020")
 
     # customize axes
     ax.set_ylabel("sentiment")
@@ -177,10 +178,13 @@ def plot_weekly_trends_stacked(df_weekly, mood_categories, mood_colors):
 def plot_weekly_trends(df_weekly, mood_colors):
      weekly_trends_colors = mood_colors.values()
 
-     # plot
-     ax = df_weekly.plot(figsize=(7, 4), linewidth=1.1, color=weekly_trends_colors)
+     # plot mood frequencies by day of week
+     ax = df_weekly.plot(figsize=(7, 4), linewidth=1.1, color=weekly_trends_colors, title="Mood Frequencies by Weekday")
      ax.set_ylabel("count")
      plt.show()
+
+     # plot positive & negative sentiment values by day of week
+     
 
 # ret df with mood strings replaced w sentiment values
 def build_sentiment_df(df, sentiment_mapping):
