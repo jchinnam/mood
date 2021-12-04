@@ -1,0 +1,38 @@
+{
+  "happy": {
+    "char": "a",
+    "description": "happy, positive",
+    "sentiment": 2,
+    "color": "#FDE517"
+  },
+  "relaxed": {
+    "char": "b",
+    "description": "relaxed, content",
+    "sentiment": 1,
+    "color": "#ABD006"
+  },
+  "neutral": {
+    "char": "c",
+    "description": "neutral, uneventful",
+    "sentiment": 0,
+    "color": "#04D0E5"
+  },
+  "sad": {
+    "char": "d",
+    "description": "sad, lonely, depressed",
+    "sentiment": -1.5,
+    "color": "#0497E5"
+  },
+  "anxious": {
+    "char": "e",
+    "description": "stressed, anxious",
+    "sentiment": -1,
+    "color": "#B684FA"
+  },
+  "upset": {
+    "char": "f",
+    "description": "angry, frustrated, upset",
+    "sentiment": -2,
+    "color": "#FA84AA"
+  }
+}

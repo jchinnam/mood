@@ -1,20 +1,20 @@
 # mood
 
-Analytics out of my own mood data from 2020. See analysis [here](/analysis.md).
+analytics out of my own mood data across 2020-2021. See analysis [here](/analysis.md).
 
-### Setup
+### usage
 ```bash
 $ git clone <repo>
 $ cd mood/
+$ python ./mood.py # after populating mood.csv
 ```
 
-### Files
-- `mood_categories.txt` for details on the 6 moods
-- `mood.csv` is a csv with 12 cols (months) where elements are `{happy, relaxed, neutral, sad, anxious, upset, x}` to represent the 6 moods, with `x` for trailing days (example: 2 at the end of feb)
+### files
+- `moods_info.json`: details on the 6 moods
+- `mood.csv`: raw mood data, columns represent months and each element is a character in the set `{a, b, c, d, e, f, x}` to represent the 6 moods (see `moods_info.json` for which mood corresponds to which character), with `x` for trailing days (example: 2 at the end of feb)
 
-### Analytics
-- Mood frequency & percentages for the year
-- Monthly and seasonal frequency tables
-- Time series (via sentiment assignment)
-  - with 7-day rolling mean
-  - with 30-day rolling mean
+### analytics
+- total mood frequencies & percentages
+- monthly frequency tables
+- annual mood frequency bar plots
+- time series (via sentiment assignment) with 7 and 30 day rolling means
